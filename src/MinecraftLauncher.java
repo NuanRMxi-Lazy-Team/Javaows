@@ -15,8 +15,8 @@ public class MinecraftLauncher extends JFrame {
     private String configFilePath;
 
     public MinecraftLauncher() {
-        super("Minecraft Launcher");
-        setSize(400, 250);
+        super("Minecraft 启动器");
+        setSize(600, 200); // 调整窗口大小
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
@@ -25,8 +25,8 @@ public class MinecraftLauncher extends JFrame {
         config = loadConfig();
 
         // Create buttons
-        findLauncherButton = new JButton("寻找现有的启动器");
-        downloadHMCLButton = new JButton("下载并启动 HMCL");
+        findLauncherButton = new JButton("寻找启动器");
+        downloadHMCLButton = new JButton("下载 HMCL");
 
         // Create combo box
         launcherComboBox = new JComboBox<>();
@@ -36,7 +36,7 @@ public class MinecraftLauncher extends JFrame {
 
         // Button panel
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(3, 1, 10, 10));
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10)); // 水平排列
         buttonPanel.add(findLauncherButton);
         buttonPanel.add(downloadHMCLButton);
         buttonPanel.add(launcherComboBox);
@@ -103,8 +103,8 @@ public class MinecraftLauncher extends JFrame {
                         out.write(buffer, 0, bytesRead);
                     }
 
-                    // Launch HMCL
-                    launchHMCL(destinationPath);
+                    // Launch HMCL with log window
+                    launchHMCLWithLog(destinationPath);
                 }
             } else {
                 JOptionPane.showMessageDialog(this, "下载失败，响应码: " + responseCode, "错误", JOptionPane.ERROR_MESSAGE);
@@ -115,12 +115,32 @@ public class MinecraftLauncher extends JFrame {
         }
     }
 
-    private void launchHMCL(String filePath) {
+    private void launchHMCLWithLog(String filePath) {
         try {
             ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", filePath);
-            processBuilder.inheritIO();
-            processBuilder.start();
-            JOptionPane.showMessageDialog(this, "HMCL 已启动", "成功", JOptionPane.INFORMATION_MESSAGE);
+            processBuilder.redirectErrorStream(true); // 合并输出流和错误流
+            Process process = processBuilder.start();
+
+            // 创建日志窗口
+            JFrame logFrame = new JFrame("HMCL 日志");
+            logFrame.setSize(800, 600);
+            logFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            JTextArea logArea = new JTextArea();
+            logArea.setEditable(false);
+            logFrame.add(new JScrollPane(logArea));
+            logFrame.setVisible(true);
+
+            // 读取并显示日志
+            new Thread(() -> {
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        logArea.append(line + "\n");
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }).start();
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "启动失败: " + e.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
@@ -159,11 +179,6 @@ public class MinecraftLauncher extends JFrame {
             JOptionPane.showMessageDialog(this, "保存配置失败: " + e.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
-    }
-
-    // 添加一个公共方法供外部调用
-    public void launch() {
-        downloadAndLaunchHMCL();
     }
 
     public static void main(String[] args) {
