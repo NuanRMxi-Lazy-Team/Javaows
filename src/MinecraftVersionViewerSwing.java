@@ -7,6 +7,10 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class MinecraftVersionViewerSwing extends JFrame {
     private JButton refreshButton;
@@ -75,14 +79,38 @@ public class MinecraftVersionViewerSwing extends JFrame {
                     String id = versionNode.path("id").asText();
                     String type = versionNode.path("type").asText();
                     String releaseTime = versionNode.path("releaseTime").asText();
-                    model.addRow(new Object[]{id, type, releaseTime});
+
+                    // Convert releaseTime to UTC+8
+                    SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+                    SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy年MM月dd日HH点mm分");
+                    outputFormat.setTimeZone(TimeZone.getTimeZone("UTC+8"));
+                    Date date = inputFormat.parse(releaseTime);
+                    String formattedReleaseTime = outputFormat.format(date);
+
+                    model.addRow(new Object[]{id, getTypeDescription(type), formattedReleaseTime});
                 }
 
                 statusLabel.setText("状态：版本载入完成！");
             } catch (Exception e) {
                 statusLabel.setText("状态: 错误 - " + e.getMessage());
+                JOptionPane.showMessageDialog(this, "无法加载版本信息，请检查链接的合法性或稍后重试。\n链接: " , "错误", JOptionPane.ERROR_MESSAGE);
             }
         }).start();
+    }
+
+    private String getTypeDescription(String type) {
+        switch (type) {
+            case "snapshot":
+                return "快照";
+            case "release":
+                return "正式版";
+            case "old_alpha":
+                return "旧内测版";
+            case "old_beta":
+                return "旧测试版";
+            default:
+                return type;
+        }
     }
 
     private void showVersionDetails() {
@@ -95,5 +123,12 @@ public class MinecraftVersionViewerSwing extends JFrame {
             String details = String.format("版本号: %s\n发布类型: %s\n发布日期: %s", versionId, versionType, releaseTime);
             detailView.setText(details);
         }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            MinecraftVersionViewerSwing viewer = new MinecraftVersionViewerSwing();
+            viewer.setVisible(true);
+        });
     }
 }

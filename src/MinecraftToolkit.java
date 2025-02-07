@@ -17,6 +17,7 @@ public class MinecraftToolkit extends JFrame {
         JButton translatorAppButton = new JButton("翻译包实用程序");
         JButton minecraftLauncherButton = new JButton("启动器");
         JButton startServerButton = new JButton("服务器");
+        JButton startDownloaderButton = new JButton("启动下载器（未完工）");
 
         // Button panel
         JPanel buttonPanel = new JPanel();
@@ -25,6 +26,7 @@ public class MinecraftToolkit extends JFrame {
         buttonPanel.add(translatorAppButton);
         buttonPanel.add(minecraftLauncherButton);
         buttonPanel.add(startServerButton);
+        buttonPanel.add(startDownloaderButton);
 
         // Add button panel to frame
         add(buttonPanel, BorderLayout.CENTER);
@@ -70,6 +72,17 @@ public class MinecraftToolkit extends JFrame {
                 SwingUtilities.invokeLater(() -> {
                     StartServer startServer = new StartServer();
                     startServer.setVisible(true);
+                });
+            }
+        });
+
+        startDownloaderButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Launch Downloader
+                SwingUtilities.invokeLater(() -> {
+                    Downloader downloader = new Downloader();
+                    downloader.setVisible(true);
                 });
             }
         });
