@@ -8,7 +8,10 @@ import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
-
+/*
+    TODO:I Love NuanRMxi and SkyDynamic
+    DO NOT REMOVE!
+ */
 public class Downloader extends JFrame {
     private JTextField urlField;
     private JButton destinationButton;
@@ -105,20 +108,30 @@ public class Downloader extends JFrame {
             long partSize = fileSize / threadCount;
             AtomicLong downloaded = new AtomicLong(0);
 
+            // 获取文件名
+            String fileName = fileUrl.getPath().substring(fileUrl.getPath().lastIndexOf('/') + 1);
+            File outputFile = new File(destinationPath, fileName);
+
+            // 如果文件已存在，提示用户
+            if (outputFile.exists()) {
+                int result = JOptionPane.showConfirmDialog(this, "文件已存在，是否覆盖?", "提示", JOptionPane.YES_NO_OPTION);
+                if (result == JOptionPane.NO_OPTION) {
+                    return;
+                }
+            }
+
             for (int i = 0; i < threadCount; i++) {
                 long start = i * partSize;
-                long end = (i == threadCount - 1) ? fileSize : start + partSize - 1;
+                long end = (i == threadCount - 1) ? fileSize - 1 : start + partSize - 1;
 
                 executorService.submit(() -> {
                     try {
-                        URL partUrl = new URL(url);
-                        HttpURLConnection partConnection = (HttpURLConnection) partUrl.openConnection();
+                        HttpURLConnection partConnection = (HttpURLConnection) fileUrl.openConnection();
                         partConnection.setRequestMethod("GET");
                         partConnection.setRequestProperty("Range", "bytes=" + start + "-" + end);
                         partConnection.connect();
 
                         InputStream inputStream = partConnection.getInputStream();
-                        File outputFile = new File(destinationPath + "/downloaded_file");
                         RandomAccessFile randomAccessFile = new RandomAccessFile(outputFile, "rw");
                         randomAccessFile.seek(start);
 
