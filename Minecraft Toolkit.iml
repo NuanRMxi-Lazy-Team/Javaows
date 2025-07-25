@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="fasterxml.jackson.core.databind" level="application" />
+    <orderEntry type="library" exported="" name="lib" level="application" />
+    <orderEntry type="library" exported="" name="lib1" level="project" />
+    <orderEntry type="library" name="json" level="project" />
+    <orderEntry type="library" name="java" level="project" />
+    <orderEntry type="library" name="openjfx.javafx.controls" level="project" />
+    <orderEntry type="library" name="openjfx.javafx.web" level="project" />
+    <orderEntry type="library" name="openjfx.javafx.swing" level="project" />
+    <orderEntry type="library" name="java1" level="project" />
+    <orderEntry type="library" name="uk.co.caprica.vlcj" level="project" />
+    <orderEntry type="library" name="apache.poi.ooxml" level="project" />
+    <orderEntry type="library" name="apache.logging.log4j.core" level="project" />
+    <orderEntry type="library" name="vladsch.flexmark.all" level="project" />
+  </component>
+</module>
