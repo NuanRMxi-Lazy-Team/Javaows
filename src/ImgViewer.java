@@ -41,7 +41,7 @@ public class ImgViewer extends JFrame {
         imageLabel = new JLabel();
         imageLabel.setHorizontalAlignment(JLabel.CENTER);
         imageLabel.setVerticalAlignment(JLabel.CENTER);
-        imageLabel.setBackground(Color.DARK_GRAY);
+        imageLabel.setBackground(Color.WHITE);
         imageLabel.setOpaque(true);
         imageLabel.setText("请选择图片文件");
         imageLabel.setForeground(Color.WHITE);
@@ -50,7 +50,7 @@ public class ImgViewer extends JFrame {
         // 创建滚动面板
         scrollPane = new JScrollPane(imageLabel);
         scrollPane.setPreferredSize(new Dimension(800, 600));
-        scrollPane.getViewport().setBackground(Color.DARK_GRAY);
+        scrollPane.getViewport().setBackground(Color.WHITE);
         
         add(scrollPane, BorderLayout.CENTER);
         

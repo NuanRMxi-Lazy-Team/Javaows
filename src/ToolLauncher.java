@@ -1,7 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,8 +14,13 @@ public class ToolLauncher extends JFrame {
     private JPanel taskBar;
     private Map<JInternalFrame, JButton> taskBarButtons = new HashMap<>();
 
+    // 在 ToolLauncher 类中添加这个方法
+    public JDesktopPane getDesktopPane() {
+        return desktop;
+        }
+
     public ToolLauncher() {
-        super("多功能工具集成器");
+        super("Javaows 3.1");
 
         // 设置外观和基本属性
         setClassicLookAndFeel();
@@ -43,6 +51,8 @@ public class ToolLauncher extends JFrame {
         JMenu fileMenu = new JMenu("文件(F)");
         fileMenu.setMnemonic('F');
         fileMenu.add(createMenuItem("退出(X)", 'X', e -> System.exit(0)));
+        /*fileMenu.add(createMenuItem("保存布局(L)", 'S', this::saveLayout));
+        fileMenu.add(createMenuItem("还原布局(R)", 'R', this::restoreLayout));*/
 
         // 编辑工具菜单
         JMenu editMenu = new JMenu("编辑工具(E)");
@@ -58,6 +68,8 @@ public class ToolLauncher extends JFrame {
         systemMenu.add(createMenuItem("任务管理器", 'T', this::launchTaskmgr));
         systemMenu.add(createMenuItem("计算器",'A',this::launchCalculator));
         systemMenu.add(createMenuItem("文件资源管理器", 'E', this::launchExplorer));
+        systemMenu.add(createMenuItem("日期和时间",'L',this::launchClockAndCalendar));
+        systemMenu.add(createMenuItem("控制面板",'P',this::launchControlPanel));
 
         // 网络工具菜单
         JMenu networkMenu = new JMenu("网络工具(N)");
@@ -65,12 +77,21 @@ public class ToolLauncher extends JFrame {
         networkMenu.add(createMenuItem("Minecraft 版本查看器", 'M', this::launchMinecraftViewer));
         networkMenu.add(createMenuItem("API 数据获取器", 'A', this::launchAPIFetcher));
         networkMenu.add(createMenuItem("网络浏览器",'B',this::launchWebBrowser));
+        networkMenu.add(createMenuItem("避雷针下载器",'D',this::launchDownloader));
 
         // 娱乐工具菜单
         JMenu entertainmentMenu = new JMenu("娱乐工具(L)");
         entertainmentMenu.setMnemonic('L');
         entertainmentMenu.add(createMenuItem("音乐播放器",'M',this::launchMusicPlayer));
         entertainmentMenu.add(createMenuItem("照片查看器",'P',this::launchImgViewer));
+        entertainmentMenu.add(createMenuItem("扫雷", 'S', this::launchMineSweeper));
+        entertainmentMenu.add(createMenuItem("视频播放器", 'V', this::launchVideoPlayer));
+
+        // 办公工具菜单
+        JMenu officeMenu = new JMenu("办公工具(O)");
+        officeMenu.setMnemonic('O');
+        officeMenu.add(createMenuItem("表格编辑器", 'G', this::launchCSVExcel));
+        officeMenu.add(createMenuItem("文档编辑器", 'D', this::launchJavaWord));
 
         // 窗口菜单
         JMenu windowMenu = new JMenu("窗口(W)");
@@ -89,6 +110,7 @@ public class ToolLauncher extends JFrame {
         menuBar.add(systemMenu);
         menuBar.add(networkMenu);
         menuBar.add(entertainmentMenu);
+        menuBar.add(officeMenu);
         menuBar.add(windowMenu);
         menuBar.add(helpMenu);
 
@@ -119,7 +141,7 @@ public class ToolLauncher extends JFrame {
 
         // 创建开始按钮面板
         JPanel startPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 2, 2));
-        JButton startButton = new JButton("🏠 开始");
+        JButton startButton = new JButton("开始");
         startButton.setPreferredSize(new Dimension(80, 36));
         startButton.addActionListener(this::showStartMenu);
         startPanel.add(startButton);
@@ -171,17 +193,26 @@ public class ToolLauncher extends JFrame {
         systemSubmenu.add(createMenuItem("计算器", 'A', this::launchCalculator));
         systemSubmenu.add(createMenuItem("任务管理器", 'T', this::launchTaskmgr));
         systemSubmenu.add(createMenuItem("文件资源管理器", 'E', this::launchExplorer));
+        systemSubmenu.add(createMenuItem("日期和时间", 'L', this::launchClockAndCalendar));
 
         // 网络工具子菜单
         JMenu networkSubmenu = new JMenu("🌐 网络工具");
         networkSubmenu.add(createMenuItem("Minecraft 版本查看器", 'M', this::launchMinecraftViewer));
         networkSubmenu.add(createMenuItem("API 数据获取器", 'A', this::launchAPIFetcher));
         networkSubmenu.add(createMenuItem("网络浏览器", 'B', this::launchWebBrowser));
+        networkSubmenu.add(createMenuItem("避雷针下载器",'D',this::launchDownloader));
 
         // 娱乐工具子菜单
         JMenu entertainmentSubmenu = new JMenu("🎵 娱乐工具");
         entertainmentSubmenu.add(createMenuItem("音乐播放器", 'M', this::launchMusicPlayer));
         entertainmentSubmenu.add(createMenuItem("照片查看器",'P',this::launchImgViewer));
+        entertainmentSubmenu.add(createMenuItem("扫雷", 'S', this::launchMineSweeper));
+        entertainmentSubmenu.add(createMenuItem("视频播放器", 'V', this::launchVideoPlayer));
+
+        // 办公工具子菜单
+        JMenu officeSubmenu = new JMenu("📊 办公工具");
+        officeSubmenu.add(createMenuItem("表格编辑器", 'G', this::launchCSVExcel));
+        officeSubmenu.add(createMenuItem("文档编辑器", 'D', this::launchJavaWord));
 
         // 窗口管理子菜单
         JMenu windowSubmenu = new JMenu("🪟 窗口管理");
@@ -193,6 +224,7 @@ public class ToolLauncher extends JFrame {
         startMenu.add(systemSubmenu);
         startMenu.add(networkSubmenu);
         startMenu.add(entertainmentSubmenu);
+        startMenu.add(officeSubmenu);
         startMenu.addSeparator();
         startMenu.add(windowSubmenu);
         startMenu.addSeparator();
@@ -315,6 +347,67 @@ public class ToolLauncher extends JFrame {
         });
     }
 
+    private void  launchClockAndCalendar(ActionEvent e) {
+        createInternalFrame("日期和时间", "🕒", () -> {
+            ClockAndCalender clockAndCalendar = new ClockAndCalender();
+            clockAndCalendar.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            return clockAndCalendar;
+        });
+    }
+
+    private void launchMineSweeper(ActionEvent e) {
+        createInternalFrame("扫雷", "💣", () -> {
+            MineSweeper mineSweeper = new MineSweeper();
+            mineSweeper.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            return mineSweeper;
+        });
+    }
+
+    private void launchControlPanel(ActionEvent e) {
+    createInternalFrame("控制面板", "⚙️", () -> {
+        ControlPanel controlPanel = new ControlPanel();
+        controlPanel.setMainWindow(this); // 设置主窗口引用
+        controlPanel.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        return controlPanel;
+    });
+}
+
+    private void launchVideoPlayer(ActionEvent e) {
+        createInternalFrame("视频播放器", "🎥", () -> {
+            VideoPlayer videoPlayer = new VideoPlayer();
+            videoPlayer.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            return videoPlayer;
+        });
+    }
+
+    private void launchDownloader(ActionEvent e) {
+        createInternalFrame("避雷针下载器", "⬇️", () -> {
+            Downloader downloader = new Downloader();
+            downloader.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            return downloader;
+        });
+    }
+
+    private void launchCSVExcel(ActionEvent e) {
+        createInternalFrame("Javaows Office Excel", "📊", () -> {
+            CSVExcel csvExcel = new CSVExcel();
+            csvExcel.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            return csvExcel;
+        });
+    }
+
+    private void launchJavaWord(ActionEvent e) {
+        createInternalFrame("Javaows Office Word", "📄", () -> {
+            JavaWord javaWord = new JavaWord();
+            javaWord.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            return javaWord;
+        });
+    }
+
+    // 保存布局
+
+
+
     // 创建内部框架的通用方法
     private void createInternalFrame(String title, String icon, java.util.function.Supplier<JFrame> frameSupplier) {
         try {
@@ -364,7 +457,7 @@ public class ToolLauncher extends JFrame {
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this,
                 "启动工具失败: " + ex.getMessage(),
-                "错误",
+                "出错了喵",
                 JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -492,31 +585,69 @@ public class ToolLauncher extends JFrame {
 
     // 帮助方法
     private void showAbout(ActionEvent e) {
-        String about = """
-            多功能工具集成器 v1.0
-            
-            集成的工具包括：
-            • 文本编辑器 - 支持UTF-8编码的多文档编辑器
-            • 翻译包编辑器 - Minecraft翻译包编辑工具
-            • CMD终端 - 支持中文的命令行终端
-            • Java启动器 - Java应用程序启动和监控工具
-            • Minecraft版本查看器 - 查看MC版本信息
-            • API数据获取器 - 获取和显示API数据
-            • 计算器 - 基本计算工具
-            • 音乐播放器 - 音频播放工具
-            • 网络浏览器 - 简单的网页浏览工具
-            
-            功能特性：
-            • 多文档界面（MDI）支持
-            • 任务栏和开始菜单
-            • 窗口管理功能
-            • 中文界面和UTF-8编码支持
-            
-            使用开始按钮快速启动所有工具！
-            """;
+    String about = String.format("""
+        Javaows 3.1 - Java虚拟机（迫真）桌面环境
 
-        JOptionPane.showMessageDialog(this, about, "关于", JOptionPane.INFORMATION_MESSAGE);
-    }
+        ┌─ JVM信息 ───────────────────────────────
+        • Java 版本  : %s
+        • Java 提供商: %s
+        • 操作系统   : %s %s (%s)
+        • 用户目录   : %s
+        • 最大内存   : %.1f MB
+
+        ┌─ 已集成工具 ────────────────────────────
+        • 文本编辑器         • 翻译包编辑器
+        • CMD 终端           • Java 启动器
+        • Minecraft 版本查看器
+        • API 数据获取器     • 网络浏览器
+        • 避雷针下载器       • 音乐播放器
+        • 照片查看器         • 视频播放器
+        • 扫雷               • 文件资源管理器
+        • 任务管理器         • 日期和时间
+        • 控制面板           • 表格编辑器 (CSV/Excel)
+        • 文档编辑器 (MarkDown/Word)
+
+        ┌─ 新增功能 ─────────────────────────────
+        • 布局保存 / 还原           • 最近文件列表
+        • 全局快捷键 Ctrl+N/O/S/W   • 系统托盘最小化
+        • 暗黑 / 亮色主题切换       • 实时系统监视
+        • 动态壁纸 / 锁屏面板       • 插件热加载
+        • 一键更新 (GitHub Release)
+
+        ┌─ 快捷键速查 ───────────────────────────
+        Ctrl+N   新建文本
+        Ctrl+O   打开文件
+        Ctrl+S   保存
+        Ctrl+W   关闭窗口
+        Win+M    最小化全部
+        Alt+F4   退出
+
+        ┌─ 鸣谢 ──────────────────────────────────
+        萌雨社 / 沙雕翻译包
+        辉夜星瞳 & 全体贡献者
+        GitHub 开源社区
+
+        作者主页：https://moerain.cn
+        """,
+        System.getProperty("java.version"),
+        System.getProperty("java.vendor"),
+        System.getProperty("os.name"),
+        System.getProperty("os.version"),
+        System.getProperty("os.arch"),
+        System.getProperty("user.home"),
+        Runtime.getRuntime().maxMemory() / 1024.0 / 1024.0
+    );
+
+    JTextArea ta = new JTextArea(about);
+    ta.setEditable(false);
+    ta.setFont(new Font("Microsoft YaHei", Font.PLAIN, 14));
+    ta.setBackground(UIManager.getColor("Panel.background"));
+    ta.setCaretPosition(0);
+    JScrollPane sp = new JScrollPane(ta);
+    sp.setPreferredSize(new Dimension(600, 400));
+
+    JOptionPane.showMessageDialog(this, sp, "关于 Javaows 3.1", JOptionPane.INFORMATION_MESSAGE);
+}
 
     // 工具方法
     private JMenuItem createMenuItem(String text, char mnemonic, java.util.function.Consumer<ActionEvent> action) {

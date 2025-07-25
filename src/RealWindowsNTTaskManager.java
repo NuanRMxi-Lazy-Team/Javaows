@@ -821,7 +821,7 @@ public class RealWindowsNTTaskManager extends JFrame {
     }
 
     private void showNewTaskDialog() {
-        String program = JOptionPane.showInputDialog(this, "键入程序、文件夹、文档或 Internet 资源的名称，Windows 将为您打开它。", "新建任务", JOptionPane.PLAIN_MESSAGE);
+        String program = JOptionPane.showInputDialog(this, "键入程序、文件夹、文档或 Internet 资源的名称，Javaows 将为您打开它。", "新建任务", JOptionPane.PLAIN_MESSAGE);
         if (program != null && !program.trim().isEmpty()) {
             executor.submit(() -> {
                 try {
