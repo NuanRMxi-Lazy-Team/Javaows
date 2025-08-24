@@ -270,20 +270,101 @@ public class ControlPanel extends JFrame {
     }
 
     private void applyWallpaperToDesktop(BufferedImage image, WallpaperMode mode) {
-        // 为桌面设置壁纸
+        // 为桌面设置壁纸（在 JDesktopPane 的最底层添加一个绘制组件）
         JDesktopPane desktop = mainWindow.getDesktopPane();
-        if (desktop != null) {
-            // 创建一个自定义的JDesktopPane来绘制壁纸
-            desktop.setOpaque(false);
+        if (desktop == null) return;
 
-            // 设置背景绘制
-            desktop.setBackground(Color.BLACK);
-
-            // 这里可以进一步实现壁纸的绘制逻辑
-            // 为了简化，我们只是显示一个消息
-            System.out.println("正在应用壁纸: " + currentWallpaperPath);
-            System.out.println("壁纸模式: " + mode);
+        // 先移除已有的壁纸组件
+        for (Component comp : desktop.getComponents()) {
+            if ("WallpaperBackground".equals(comp.getName())) {
+                desktop.remove(comp);
+                break;
+            }
         }
+
+        // 创建绘制壁纸的背景组件
+        JComponent bg = new JComponent() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (image == null) return;
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+                int dw = getWidth();
+                int dh = getHeight();
+
+                switch (mode) {
+                    case STRETCH: {
+                        g2.drawImage(image, 0, 0, dw, dh, null);
+                        break;
+                    }
+                    case FIT: {
+                        double sx = dw / (double) image.getWidth();
+                        double sy = dh / (double) image.getHeight();
+                        double s = Math.min(sx, sy);
+                        int nw = (int) Math.round(image.getWidth() * s);
+                        int nh = (int) Math.round(image.getHeight() * s);
+                        int x = (dw - nw) / 2;
+                        int y = (dh - nh) / 2;
+                        // 背景填充为桌面默认色
+                        Color bgColor = UIManager.getColor("desktop");
+                        if (bgColor != null) {
+                            g2.setColor(bgColor);
+                            g2.fillRect(0, 0, dw, dh);
+                        }
+                        g2.drawImage(image, x, y, nw, nh, null);
+                        break;
+                    }
+                    case CENTER: {
+                        int x = (dw - image.getWidth()) / 2;
+                        int y = (dh - image.getHeight()) / 2;
+                        Color bgColor = UIManager.getColor("desktop");
+                        if (bgColor != null) {
+                            g2.setColor(bgColor);
+                            g2.fillRect(0, 0, dw, dh);
+                        }
+                        g2.drawImage(image, x, y, null);
+                        break;
+                    }
+                    case TILE: {
+                        for (int y = 0; y < dh; y += image.getHeight()) {
+                            for (int x = 0; x < dw; x += image.getWidth()) {
+                                g2.drawImage(image, x, y, null);
+                            }
+                        }
+                        break;
+                    }
+                }
+                g2.dispose();
+            }
+        };
+        bg.setName("WallpaperBackground");
+        bg.setOpaque(false);
+        bg.setBounds(0, 0, desktop.getWidth(), desktop.getHeight());
+
+        // 确保背景组件跟随桌面尺寸变化（避免重复监听，使用 ClientProperty 记录）
+        java.awt.event.ComponentListener oldListener = (java.awt.event.ComponentListener) desktop.getClientProperty("WallpaperResizer");
+        if (oldListener != null) {
+            desktop.removeComponentListener(oldListener);
+        }
+        java.awt.event.ComponentAdapter resizer = new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentResized(java.awt.event.ComponentEvent e) {
+                bg.setSize(desktop.getSize());
+                bg.revalidate();
+                bg.repaint();
+            }
+        };
+        desktop.addComponentListener(resizer);
+        desktop.putClientProperty("WallpaperResizer", resizer);
+
+        // 设置桌面为不透明（但我们用背景组件绘制）
+        desktop.setOpaque(true);
+
+        // 添加到最底层，以确保在所有内部窗口之下
+        desktop.add(bg, JLayeredPane.FRAME_CONTENT_LAYER);
+        desktop.revalidate();
+        desktop.repaint();
     }
 
     private void restoreDefaultWallpaper() {
@@ -296,8 +377,23 @@ public class ControlPanel extends JFrame {
             if (mainWindow != null) {
                 JDesktopPane desktop = mainWindow.getDesktopPane();
                 if (desktop != null) {
+                    // 移除壁纸背景组件
+                    for (Component comp : desktop.getComponents()) {
+                        if ("WallpaperBackground".equals(comp.getName())) {
+                            desktop.remove(comp);
+                            break;
+                        }
+                    }
+                    // 移除尺寸监听器
+                    java.awt.event.ComponentListener oldListener = (java.awt.event.ComponentListener) desktop.getClientProperty("WallpaperResizer");
+                    if (oldListener != null) {
+                        desktop.removeComponentListener(oldListener);
+                        desktop.putClientProperty("WallpaperResizer", null);
+                    }
                     desktop.setOpaque(true);
                     desktop.setBackground(UIManager.getColor("desktop"));
+                    desktop.revalidate();
+                    desktop.repaint();
                 }
             }
 

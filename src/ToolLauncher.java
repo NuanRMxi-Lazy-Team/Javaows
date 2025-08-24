@@ -20,7 +20,7 @@ public class ToolLauncher extends JFrame {
         }
 
     public ToolLauncher() {
-        super("Javaows 3.1");
+        super(Localization.t("app.title", "Javaows 3.1"));
 
         // 设置外观和基本属性
         setClassicLookAndFeel();
@@ -48,62 +48,62 @@ public class ToolLauncher extends JFrame {
         JMenuBar menuBar = new JMenuBar();
 
         // 文件菜单
-        JMenu fileMenu = new JMenu("文件(F)");
+        JMenu fileMenu = new JMenu(Localization.t("menu.file", "文件(F)"));
         fileMenu.setMnemonic('F');
-        fileMenu.add(createMenuItem("退出(X)", 'X', e -> System.exit(0)));
+        fileMenu.add(createMenuItem(Localization.t("menu.file.exit", "退出(X)"), 'X', e -> System.exit(0)));
         /*fileMenu.add(createMenuItem("保存布局(L)", 'S', this::saveLayout));
         fileMenu.add(createMenuItem("还原布局(R)", 'R', this::restoreLayout));*/
 
         // 编辑工具菜单
-        JMenu editMenu = new JMenu("编辑工具(E)");
+        JMenu editMenu = new JMenu(Localization.t("menu.editTools", "编辑工具(E)"));
         editMenu.setMnemonic('E');
-        editMenu.add(createMenuItem("文本编辑器", 'T', this::launchTextEditor));
-        editMenu.add(createMenuItem("翻译包编辑器", 'R', this::launchTranslatorApp));
+        editMenu.add(createMenuItem(Localization.t("menu.editTools.textEditor", "文本编辑器"), 'T', this::launchTextEditor));
+        editMenu.add(createMenuItem(Localization.t("menu.editTools.translator", "翻译包编辑器"), 'R', this::launchTranslatorApp));
 
         // 系统工具菜单
-        JMenu systemMenu = new JMenu("系统工具(S)");
+        JMenu systemMenu = new JMenu(Localization.t("menu.systemTools", "系统工具(S)"));
         systemMenu.setMnemonic('S');
-        systemMenu.add(createMenuItem("CMD 终端", 'C', this::launchCmdTerminal));
-        systemMenu.add(createMenuItem("Java 启动器", 'J', this::launchJavaLauncher));
-        systemMenu.add(createMenuItem("任务管理器", 'T', this::launchTaskmgr));
-        systemMenu.add(createMenuItem("计算器",'A',this::launchCalculator));
-        systemMenu.add(createMenuItem("文件资源管理器", 'E', this::launchExplorer));
-        systemMenu.add(createMenuItem("日期和时间",'L',this::launchClockAndCalendar));
-        systemMenu.add(createMenuItem("控制面板",'P',this::launchControlPanel));
+        systemMenu.add(createMenuItem(Localization.t("menu.systemTools.cmd", "CMD 终端"), 'C', this::launchCmdTerminal));
+        systemMenu.add(createMenuItem(Localization.t("menu.systemTools.javaLauncher", "Java 启动器"), 'J', this::launchJavaLauncher));
+        systemMenu.add(createMenuItem(Localization.t("menu.systemTools.taskManager", "任务管理器"), 'T', this::launchTaskmgr));
+        systemMenu.add(createMenuItem(Localization.t("menu.systemTools.calculator", "计算器"),'A',this::launchCalculator));
+        systemMenu.add(createMenuItem(Localization.t("menu.systemTools.explorer", "文件资源管理器"), 'E', this::launchExplorer));
+        systemMenu.add(createMenuItem(Localization.t("menu.systemTools.clock", "日期和时间"),'L',this::launchClockAndCalendar));
+        systemMenu.add(createMenuItem(Localization.t("menu.systemTools.controlPanel", "控制面板"),'P',this::launchControlPanel));
 
         // 网络工具菜单
-        JMenu networkMenu = new JMenu("网络工具(N)");
+        JMenu networkMenu = new JMenu(Localization.t("menu.networkTools", "网络工具(N)"));
         networkMenu.setMnemonic('N');
-        networkMenu.add(createMenuItem("Minecraft 版本查看器", 'M', this::launchMinecraftViewer));
-        networkMenu.add(createMenuItem("API 数据获取器", 'A', this::launchAPIFetcher));
-        networkMenu.add(createMenuItem("网络浏览器",'B',this::launchWebBrowser));
-        networkMenu.add(createMenuItem("避雷针下载器",'D',this::launchDownloader));
+        networkMenu.add(createMenuItem(Localization.t("menu.networkTools.mcVersionViewer", "Minecraft 版本查看器"), 'M', this::launchMinecraftViewer));
+        networkMenu.add(createMenuItem(Localization.t("menu.networkTools.apiFetcher", "API 数据获取器"), 'A', this::launchAPIFetcher));
+        networkMenu.add(createMenuItem(Localization.t("menu.networkTools.webBrowser", "网络浏览器"),'B',this::launchWebBrowser));
+        networkMenu.add(createMenuItem(Localization.t("menu.networkTools.downloader", "避雷针下载器"),'D',this::launchDownloader));
 
         // 娱乐工具菜单
-        JMenu entertainmentMenu = new JMenu("娱乐工具(L)");
+        JMenu entertainmentMenu = new JMenu(Localization.t("menu.entertainment", "娱乐工具(L)"));
         entertainmentMenu.setMnemonic('L');
-        entertainmentMenu.add(createMenuItem("音乐播放器",'M',this::launchMusicPlayer));
-        entertainmentMenu.add(createMenuItem("照片查看器",'P',this::launchImgViewer));
-        entertainmentMenu.add(createMenuItem("扫雷", 'S', this::launchMineSweeper));
-        entertainmentMenu.add(createMenuItem("视频播放器", 'V', this::launchVideoPlayer));
+        entertainmentMenu.add(createMenuItem(Localization.t("menu.entertainment.music", "音乐播放器"),'M',this::launchMusicPlayer));
+        entertainmentMenu.add(createMenuItem(Localization.t("menu.entertainment.photos", "照片查看器"),'P',this::launchImgViewer));
+        entertainmentMenu.add(createMenuItem(Localization.t("menu.entertainment.minesweeper", "扫雷"), 'S', this::launchMineSweeper));
+        entertainmentMenu.add(createMenuItem(Localization.t("menu.entertainment.video", "视频播放器"), 'V', this::launchVideoPlayer));
 
         // 办公工具菜单
-        JMenu officeMenu = new JMenu("办公工具(O)");
+        JMenu officeMenu = new JMenu(Localization.t("menu.office", "办公工具(O)"));
         officeMenu.setMnemonic('O');
-        officeMenu.add(createMenuItem("表格编辑器", 'G', this::launchCSVExcel));
-        officeMenu.add(createMenuItem("文档编辑器", 'D', this::launchJavaWord));
+        officeMenu.add(createMenuItem(Localization.t("menu.office.csvExcel", "表格编辑器"), 'G', this::launchCSVExcel));
+        officeMenu.add(createMenuItem(Localization.t("menu.office.word", "文档编辑器"), 'D', this::launchJavaWord));
 
         // 窗口菜单
-        JMenu windowMenu = new JMenu("窗口(W)");
+        JMenu windowMenu = new JMenu(Localization.t("menu.window", "窗口(W)"));
         windowMenu.setMnemonic('W');
-        windowMenu.add(createMenuItem("层叠窗口", 'C', this::cascadeWindows));
-        windowMenu.add(createMenuItem("平铺窗口", 'T', this::tileWindows));
-        windowMenu.add(createMenuItem("关闭所有窗口", 'A', this::closeAllWindows));
+        windowMenu.add(createMenuItem(Localization.t("menu.window.cascade", "层叠窗口"), 'C', this::cascadeWindows));
+        windowMenu.add(createMenuItem(Localization.t("menu.window.tile", "平铺窗口"), 'T', this::tileWindows));
+        windowMenu.add(createMenuItem(Localization.t("menu.window.closeAll", "关闭所有窗口"), 'A', this::closeAllWindows));
 
         // 帮助菜单
-        JMenu helpMenu = new JMenu("帮助(H)");
+        JMenu helpMenu = new JMenu(Localization.t("menu.help", "帮助(H)"));
         helpMenu.setMnemonic('H');
-        helpMenu.add(createMenuItem("关于", 'A', this::showAbout));
+        helpMenu.add(createMenuItem(Localization.t("menu.help.about", "关于"), 'A', this::showAbout));
 
         menuBar.add(fileMenu);
         menuBar.add(editMenu);
@@ -122,14 +122,14 @@ public class ToolLauncher extends JFrame {
         toolBar.setFloatable(false);
 
         // 添加工具按钮
-        toolBar.add(createToolButton("文本编辑器", this::launchTextEditor));
-        toolBar.add(createToolButton("翻译包编辑器", this::launchTranslatorApp));
+        toolBar.add(createToolButton(Localization.t("toolbar.textEditor", "文本编辑器"), this::launchTextEditor));
+        toolBar.add(createToolButton(Localization.t("toolbar.translator", "翻译包编辑器"), this::launchTranslatorApp));
         toolBar.addSeparator();
-        toolBar.add(createToolButton("CMD 终端", this::launchCmdTerminal));
-        toolBar.add(createToolButton("Java 启动器", this::launchJavaLauncher));
+        toolBar.add(createToolButton(Localization.t("toolbar.cmd", "CMD 终端"), this::launchCmdTerminal));
+        toolBar.add(createToolButton(Localization.t("toolbar.javaLauncher", "Java 启动器"), this::launchJavaLauncher));
         toolBar.addSeparator();
-        toolBar.add(createToolButton("MC 版本查看器", this::launchMinecraftViewer));
-        toolBar.add(createToolButton("API 数据获取器", this::launchAPIFetcher));
+        toolBar.add(createToolButton(Localization.t("toolbar.mcViewer", "MC 版本查看器"), this::launchMinecraftViewer));
+        toolBar.add(createToolButton(Localization.t("toolbar.apiFetcher", "API 数据获取器"), this::launchAPIFetcher));
 
         add(toolBar, BorderLayout.NORTH);
     }
@@ -141,7 +141,7 @@ public class ToolLauncher extends JFrame {
 
         // 创建开始按钮面板
         JPanel startPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 2, 2));
-        JButton startButton = new JButton("开始");
+        JButton startButton = new JButton(Localization.t("taskbar.start", "开始"));
         startButton.setPreferredSize(new Dimension(80, 36));
         startButton.addActionListener(this::showStartMenu);
         startPanel.add(startButton);
@@ -182,43 +182,43 @@ public class ToolLauncher extends JFrame {
         startMenu.setBorder(BorderFactory.createRaisedBevelBorder());
 
         // 编辑工具子菜单
-        JMenu editSubmenu = new JMenu("📝 编辑工具");
-        editSubmenu.add(createMenuItem("文本编辑器", 'T', this::launchTextEditor));
-        editSubmenu.add(createMenuItem("翻译包编辑器", 'R', this::launchTranslatorApp));
+        JMenu editSubmenu = new JMenu("📝 " + Localization.t("menu.editTools", "编辑工具"));
+        editSubmenu.add(createMenuItem(Localization.t("menu.editTools.textEditor", "文本编辑器"), 'T', this::launchTextEditor));
+        editSubmenu.add(createMenuItem(Localization.t("menu.editTools.translator", "翻译包编辑器"), 'R', this::launchTranslatorApp));
 
         // 系统工具子菜单
-        JMenu systemSubmenu = new JMenu("⚙️ 系统工具");
-        systemSubmenu.add(createMenuItem("CMD 终端", 'C', this::launchCmdTerminal));
-        systemSubmenu.add(createMenuItem("Java 启动器", 'J', this::launchJavaLauncher));
-        systemSubmenu.add(createMenuItem("计算器", 'A', this::launchCalculator));
-        systemSubmenu.add(createMenuItem("任务管理器", 'T', this::launchTaskmgr));
-        systemSubmenu.add(createMenuItem("文件资源管理器", 'E', this::launchExplorer));
-        systemSubmenu.add(createMenuItem("日期和时间", 'L', this::launchClockAndCalendar));
+        JMenu systemSubmenu = new JMenu("⚙️ " + Localization.t("menu.systemTools", "系统工具"));
+        systemSubmenu.add(createMenuItem(Localization.t("menu.systemTools.cmd", "CMD 终端"), 'C', this::launchCmdTerminal));
+        systemSubmenu.add(createMenuItem(Localization.t("menu.systemTools.javaLauncher", "Java 启动器"), 'J', this::launchJavaLauncher));
+        systemSubmenu.add(createMenuItem(Localization.t("menu.systemTools.calculator", "计算器"), 'A', this::launchCalculator));
+        systemSubmenu.add(createMenuItem(Localization.t("menu.systemTools.taskManager", "任务管理器"), 'T', this::launchTaskmgr));
+        systemSubmenu.add(createMenuItem(Localization.t("menu.systemTools.explorer", "文件资源管理器"), 'E', this::launchExplorer));
+        systemSubmenu.add(createMenuItem(Localization.t("menu.systemTools.clock", "日期和时间"), 'L', this::launchClockAndCalendar));
 
         // 网络工具子菜单
-        JMenu networkSubmenu = new JMenu("🌐 网络工具");
-        networkSubmenu.add(createMenuItem("Minecraft 版本查看器", 'M', this::launchMinecraftViewer));
-        networkSubmenu.add(createMenuItem("API 数据获取器", 'A', this::launchAPIFetcher));
-        networkSubmenu.add(createMenuItem("网络浏览器", 'B', this::launchWebBrowser));
-        networkSubmenu.add(createMenuItem("避雷针下载器",'D',this::launchDownloader));
+        JMenu networkSubmenu = new JMenu("🌐 " + Localization.t("menu.networkTools", "网络工具"));
+        networkSubmenu.add(createMenuItem(Localization.t("menu.networkTools.mcVersionViewer", "Minecraft 版本查看器"), 'M', this::launchMinecraftViewer));
+        networkSubmenu.add(createMenuItem(Localization.t("menu.networkTools.apiFetcher", "API 数据获取器"), 'A', this::launchAPIFetcher));
+        networkSubmenu.add(createMenuItem(Localization.t("menu.networkTools.webBrowser", "网络浏览器"), 'B', this::launchWebBrowser));
+        networkSubmenu.add(createMenuItem(Localization.t("menu.networkTools.downloader", "避雷针下载器"),'D',this::launchDownloader));
 
         // 娱乐工具子菜单
-        JMenu entertainmentSubmenu = new JMenu("🎵 娱乐工具");
-        entertainmentSubmenu.add(createMenuItem("音乐播放器", 'M', this::launchMusicPlayer));
-        entertainmentSubmenu.add(createMenuItem("照片查看器",'P',this::launchImgViewer));
-        entertainmentSubmenu.add(createMenuItem("扫雷", 'S', this::launchMineSweeper));
-        entertainmentSubmenu.add(createMenuItem("视频播放器", 'V', this::launchVideoPlayer));
+        JMenu entertainmentSubmenu = new JMenu("🎵 " + Localization.t("menu.entertainment", "娱乐工具"));
+        entertainmentSubmenu.add(createMenuItem(Localization.t("menu.entertainment.music", "音乐播放器"), 'M', this::launchMusicPlayer));
+        entertainmentSubmenu.add(createMenuItem(Localization.t("menu.entertainment.photos", "照片查看器"),'P',this::launchImgViewer));
+        entertainmentSubmenu.add(createMenuItem(Localization.t("menu.entertainment.minesweeper", "扫雷"), 'S', this::launchMineSweeper));
+        entertainmentSubmenu.add(createMenuItem(Localization.t("menu.entertainment.video", "视频播放器"), 'V', this::launchVideoPlayer));
 
         // 办公工具子菜单
-        JMenu officeSubmenu = new JMenu("📊 办公工具");
-        officeSubmenu.add(createMenuItem("表格编辑器", 'G', this::launchCSVExcel));
-        officeSubmenu.add(createMenuItem("文档编辑器", 'D', this::launchJavaWord));
+        JMenu officeSubmenu = new JMenu("📊 " + Localization.t("menu.office", "办公工具"));
+        officeSubmenu.add(createMenuItem(Localization.t("menu.office.csvExcel", "表格编辑器"), 'G', this::launchCSVExcel));
+        officeSubmenu.add(createMenuItem(Localization.t("menu.office.word", "文档编辑器"), 'D', this::launchJavaWord));
 
         // 窗口管理子菜单
-        JMenu windowSubmenu = new JMenu("🪟 窗口管理");
-        windowSubmenu.add(createMenuItem("层叠窗口", 'C', this::cascadeWindows));
-        windowSubmenu.add(createMenuItem("平铺窗口", 'T', this::tileWindows));
-        windowSubmenu.add(createMenuItem("关闭所有窗口", 'A', this::closeAllWindows));
+        JMenu windowSubmenu = new JMenu("🪟 " + Localization.t("menu.window", "窗口"));
+        windowSubmenu.add(createMenuItem(Localization.t("menu.window.cascade", "层叠窗口"), 'C', this::cascadeWindows));
+        windowSubmenu.add(createMenuItem(Localization.t("menu.window.tile", "平铺窗口"), 'T', this::tileWindows));
+        windowSubmenu.add(createMenuItem(Localization.t("menu.window.closeAll", "关闭所有窗口"), 'A', this::closeAllWindows));
 
         startMenu.add(editSubmenu);
         startMenu.add(systemSubmenu);
@@ -588,14 +588,15 @@ public class ToolLauncher extends JFrame {
     String about = String.format("""
         Javaows 3.1 - Java虚拟机（迫真）桌面环境
 
-        ┌─ JVM信息 ───────────────────────────────
+        JVM信息：
         • Java 版本  : %s
         • Java 提供商: %s
+        • JVM类型： %s
         • 操作系统   : %s %s (%s)
         • 用户目录   : %s
         • 最大内存   : %.1f MB
 
-        ┌─ 已集成工具 ────────────────────────────
+        已集成工具：
         • 文本编辑器         • 翻译包编辑器
         • CMD 终端           • Java 启动器
         • Minecraft 版本查看器
@@ -606,36 +607,25 @@ public class ToolLauncher extends JFrame {
         • 任务管理器         • 日期和时间
         • 控制面板           • 表格编辑器 (CSV/Excel)
         • 文档编辑器 (MarkDown/Word)
+        • 计算器
 
-        ┌─ 新增功能 ─────────────────────────────
-        • 布局保存 / 还原           • 最近文件列表
-        • 全局快捷键 Ctrl+N/O/S/W   • 系统托盘最小化
-        • 暗黑 / 亮色主题切换       • 实时系统监视
-        • 动态壁纸 / 锁屏面板       • 插件热加载
-        • 一键更新 (GitHub Release)
-
-        ┌─ 快捷键速查 ───────────────────────────
-        Ctrl+N   新建文本
-        Ctrl+O   打开文件
-        Ctrl+S   保存
-        Ctrl+W   关闭窗口
-        Win+M    最小化全部
-        Alt+F4   退出
-
-        ┌─ 鸣谢 ──────────────────────────────────
+        鸣谢：
         萌雨社 / 沙雕翻译包
         辉夜星瞳 & 全体贡献者
         GitHub 开源社区
+        当然，也少不了你—— %s
 
         作者主页：https://moerain.cn
         """,
         System.getProperty("java.version"),
         System.getProperty("java.vendor"),
+        System.getProperty("java.vm.name"),
         System.getProperty("os.name"),
         System.getProperty("os.version"),
         System.getProperty("os.arch"),
         System.getProperty("user.home"),
-        Runtime.getRuntime().maxMemory() / 1024.0 / 1024.0
+            Runtime.getRuntime().maxMemory() / 1024.0 / 1024.0,
+            System.getProperty("user.name")
     );
 
     JTextArea ta = new JTextArea(about);
