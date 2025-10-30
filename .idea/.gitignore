@@ -1,0 +1,10 @@
+# 默认忽略的文件
+/../../../:javaows/.idea/shelf/
+/../../../:javaows/.idea/workspace.xml
+# 基于编辑器的 HTTP 客户端请求
+/../../../:javaows/.idea/httpRequests/
+# 依赖于环境的 Maven 主目录路径
+/../../../:javaows/.idea/mavenHomeManager.xml
+# Datasource local storage ignored files
+/../../../:javaows/.idea/dataSources/
+/../../../:javaows/.idea/dataSources.local.xml
