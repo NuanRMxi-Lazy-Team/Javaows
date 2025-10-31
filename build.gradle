@@ -2,6 +2,8 @@ plugins {
     id 'java'
     id 'application'
     id("org.beryx.runtime") version "2.0.0"
+    id 'maven-publish'
+    id 'com.github.breadmoirai.github-release' version '2.5.2'
 }
 
 group = 'cn.moerain'
@@ -18,8 +20,10 @@ dependencies {
 }
 
 dependencies {
+
     implementation 'com.vladsch.flexmark:flexmark-all:0.64.8'
     implementation 'org.apache.poi:poi:5.4.1'
+    implementation 'org.apache.commons:commons-lang3:3.18.0'
     implementation 'org.apache.poi:poi-ooxml:5.4.1'
     implementation 'org.apache.xmlbeans:xmlbeans:5.2.1'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.1'
@@ -40,3 +44,28 @@ runtime {
     options = ['--strip-debug', '--compress', '0', '--no-header-files', '--no-man-pages']
     imageZip = file("$buildDir/image/Javaows.zip")
 }
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+// 2. 发布到 GitHub Releases
+githubRelease {
+    token = System.getenv("TOKEN")          // 对应 secrets.GITHUB_TOKEN
+    owner = "NuanRMxi-Lazy-Team"
+    repo = "Javaows"
+    tagName = "v${version}"
+    releaseName = "v${version}"
+    releaseAssets = layout.buildDirectory.dir("libs").get().asFileTree.matching {
+        include "*.jar"
+    }
+    draft = false
+    prerelease = false
+}
+
+// 3. 让 ./gradlew publish 执行完后再上传 Release
+publish.dependsOn githubRelease
