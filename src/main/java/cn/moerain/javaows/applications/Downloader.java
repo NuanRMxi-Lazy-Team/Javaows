@@ -60,6 +60,9 @@ public class Downloader extends JFrame {
             }
         });
 
+        //下载完成提示
+
+
         // Create progress bar
         progressBar = new JProgressBar(0, 100);
         progressBar.setStringPainted(true);
@@ -102,6 +105,11 @@ public class Downloader extends JFrame {
             if (fileSize == -1) {
                 JOptionPane.showMessageDialog(this, "无法获取文件大小", "错误", JOptionPane.ERROR_MESSAGE);
                 return;
+            }
+
+            if (fileSize <= 0) {
+            JOptionPane.showMessageDialog(this, "文件大小无效或 URL 不可访问", "错误", JOptionPane.ERROR_MESSAGE);
+            return;
             }
 
             progressBar.setMaximum(fileSize);
@@ -148,6 +156,15 @@ public class Downloader extends JFrame {
                             SwingUtilities.invokeLater(() -> {
                                 progressBar.setValue((int) downloaded.get());
                             });
+                        }
+
+                        synchronized (this) {
+                        if (downloaded.get() == fileSize) {
+                             executorService.shutdown();
+                             SwingUtilities.invokeLater(() -> {
+                                JOptionPane.showMessageDialog(this, "下载完成！", "完成", JOptionPane.INFORMATION_MESSAGE);
+                                     });
+                                 }
                         }
 
                         randomAccessFile.close();
