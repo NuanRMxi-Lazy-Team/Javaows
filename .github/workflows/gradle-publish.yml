@@ -49,4 +49,4 @@ jobs:
         echo "GITHUB_TOKEN=${RELEASE_TOKEN}"
         ./gradlew githubRelease
       env:
-        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
