@@ -41,8 +41,20 @@ application {
 }
 
 // 绿色发行包（Windows / Linux / macOS 一键生成）
+//runtime {
+//    options = ['--strip-debug', '--no-header-files', '--no-man-pages']
+//    imageZip = file("$buildDir/image/Javaows.zip")
+//}
+
 runtime {
-    options = ['--strip-debug', '--no-header-files', '--no-man-pages']
+    options = ['--strip-debug',
+               '--no-header-files', '--no-man-pages']
+
+    // 给三大平台分别打 image
+    targetPlatform('win', System.getenv('WIN_JDK'))   // Windows x64
+    targetPlatform('linux', System.getenv('LINUX_JDK'))
+    targetPlatform('mac', System.getenv('MAC_JDK'))
+
     imageZip = file("$buildDir/image/Javaows.zip")
 }
 
