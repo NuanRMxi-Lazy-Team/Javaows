@@ -44,6 +44,7 @@ jobs:
 
     - name: Compress runtime image  → 最小体积
       run: |
+        ls -la build/image
         cd build/image
         7z a -tzip -mx=9 Javaows.zip Javaows/*
 
