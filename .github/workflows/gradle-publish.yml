@@ -40,11 +40,20 @@ jobs:
     - name: Build with Gradle
       run: |
         echo "GITHUB_TOKEN is >>${RELEASE_TOKEN}<<"
-        ./gradlew build
+        ./gradlew runtime
+
+    - name: Compress runtime image  → 最小体积
+      run: |
+        cd build/image
+        7z a -tzip -mx=9 Javaows.zip Javaows/*
 
     # The USERNAME and TOKEN need to correspond to the credentials environment variables used in
     # the publishing section of your build.gradle
-    - name: Publish to GitHub Packages
-      run: ./gradlew githubRelease
+    - name: Upload to GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: v${{ github.run_number }}
+        name: v${{ github.run_number }}
+        files: build/image/Javaows.zip
       env:
-        RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
