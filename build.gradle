@@ -7,7 +7,7 @@ plugins {
 }
 
 group = 'cn.moerain'
-version = '1.0-SNAPSHOT'
+version = '3.0-Test'
 
 repositories {
     mavenCentral()
@@ -69,3 +69,4 @@ githubRelease {
 
 // 3. 让 ./gradlew publish 执行完后再上传 Release
 publish.dependsOn githubRelease
+println(">>> token=" + (findProperty("github_token") ?: System.getenv("GITHUB_TOKEN")))

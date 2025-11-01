@@ -8,8 +8,10 @@
 name: Gradle Package
 
 on:
-  release:
-    types: [created]
+  push:
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
   build:
@@ -43,5 +45,4 @@ jobs:
     - name: Publish to GitHub Packages
       run: ./gradlew githubRelease
       env:
-        USERNAME: ${{ github.actor }}
-        TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }
