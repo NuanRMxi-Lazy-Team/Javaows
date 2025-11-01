@@ -55,7 +55,7 @@ publishing {
 
 // 2. 发布到 GitHub Releases
 githubRelease {
-    token = findProperty("github_token") ?: System.getenv("GITHUB_TOKEN")        // 对应 secrets.GITHUB_TOKEN
+    token = findProperty("release_token") ?: System.getenv("RELEASE_TOKEN")        // 对应 secrets.GITHUB_TOKEN
     owner = "NuanRMxi-Lazy-Team"
     repo = "Javaows"
     tagName = "v${version}"
