@@ -74,9 +74,8 @@ if (hasProperty('release_token') || System.getenv('RELEASE_TOKEN')) {
         repo  = 'Javaows'
         tagName = "v${version}"
         releaseName = "v${version}"
-        releaseAssets = layout.buildDirectory.dir('libs').get().asFileTree.matching {
-            include '*.jar'
-        }
+        // ✅ 发布 runtime 压缩包
+        releaseAssets = layout.buildDirectory.file("image/Javaows.zip")
         draft = false
         prerelease = false
     }
