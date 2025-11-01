@@ -45,8 +45,6 @@ jobs:
     # The USERNAME and TOKEN need to correspond to the credentials environment variables used in
     # the publishing section of your build.gradle
     - name: Publish to GitHub Packages
-      run: |
-        echo "GITHUB_TOKEN=${RELEASE_TOKEN}"
-        ./gradlew githubRelease
+      run: ./gradlew githubRelease
       env:
         RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}

@@ -4,6 +4,7 @@ plugins {
     id("org.beryx.runtime") version "2.0.0"
     id 'maven-publish'
     id 'com.github.breadmoirai.github-release' version '2.5.2'
+
 }
 
 group = 'cn.moerain'
@@ -54,19 +55,20 @@ publishing {
 }
 
 // 2. 发布到 GitHub Releases
-githubRelease {
-    token = findProperty("release_token") ?: System.getenv("RELEASE_TOKEN")        // 对应 secrets.GITHUB_TOKEN
-    owner = "NuanRMxi-Lazy-Team"
-    repo = "Javaows"
-    tagName = "v${version}"
-    releaseName = "v${version}"
-    releaseAssets = layout.buildDirectory.dir("libs").get().asFileTree.matching {
-        include "*.jar"
+if (hasProperty('release_token') || System.getenv('RELEASE_TOKEN')) {
+    githubRelease {
+        token = findProperty('release_token') ?: System.getenv('RELEASE_TOKEN')
+        owner = 'NuanRMxi-Lazy-Team'
+        repo  = 'Javaows'
+        tagName = "v${version}"
+        releaseName = "v${version}"
+        releaseAssets = layout.buildDirectory.dir('libs').get().asFileTree.matching {
+            include '*.jar'
+        }
+        draft = false
+        prerelease = false
     }
-    draft = false
-    prerelease = false
 }
-
 // 3. 让 ./gradlew publish 执行完后再上传 Release
 publish.dependsOn githubRelease
 println(">>> token=" + (findProperty("github_token") ?: System.getenv("GITHUB_TOKEN")))
