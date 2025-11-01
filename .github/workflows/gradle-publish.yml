@@ -46,7 +46,7 @@ jobs:
       run: |
         ls -la build/image
         cd build/image
-        7z a -tzip -mx=9 Javaows.zip Javaows/*
+        7z a -tzip -mx=9 Javaows.zip ./*
 
     # The USERNAME and TOKEN need to correspond to the credentials environment variables used in
     # the publishing section of your build.gradle
